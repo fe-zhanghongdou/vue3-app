@@ -1,0 +1,12 @@
+{
+  // 强制使用单引号
+  "prettier.singleQuote": true,
+  "prettier.semi": true,
+
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["vue", "javascript", "typescript"]
+}

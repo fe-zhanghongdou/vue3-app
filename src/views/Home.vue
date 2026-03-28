@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
-const pageName = ref<string>(2)
+const pageName = ref<string>('2');
+const unusedVar = 'This variable is declared but never used';
 
-pageName.value = 'hello'
+pageName.value = 'hello';
 </script>
 
 <template>
   <div class="home">
     <h1>首页</h1>
     <p>欢迎来到 Vue3 应用</p>
-    <router-link to="/waterfall">查看瀑布流</router-link>
+    <router-link to="/waterfall">{{ unusedVar }}</router-link>
   </div>
 </template>
 
