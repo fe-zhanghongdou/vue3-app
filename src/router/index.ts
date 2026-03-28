@@ -5,18 +5,18 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/Home.vue')
+    component: () => import('../views/Home.vue'),
   },
   {
     path: '/waterfall',
     name: 'Waterfall',
-    component: () => import('../views/Waterfall.vue')
-  }
+    component: () => import('../views/Waterfall.vue'),
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 
 export default router

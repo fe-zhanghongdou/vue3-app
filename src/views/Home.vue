@@ -1,8 +1,8 @@
 <script setup lang="ts">
-
 import { ref } from 'vue'
 
 const pageName = ref<string>(2)
+
 pageName.value = 'hello'
 </script>
 
@@ -40,7 +40,9 @@ pageName.value = 'hello'
   text-decoration: none;
   border-radius: 25px;
   font-weight: 500;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .home a:hover {

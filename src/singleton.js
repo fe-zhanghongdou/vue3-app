@@ -19,24 +19,24 @@
 // }
 
 export const Singleton = (function () {
-  let instance; // 私有变量，保存唯一实例
+  let instance // 私有变量，保存唯一实例
 
   function init() {
     // 私有属性和方法
     return {
-      name: "单例实例",
+      name: '单例实例',
       method() {
-        console.log("方法调用");
+        console.log('方法调用')
       },
-    };
+    }
   }
 
   return {
     getInstance() {
       if (!instance) {
-        instance = init();
+        instance = init()
       }
-      return instance;
+      return instance
     },
-  };
-})();
+  }
+})()
