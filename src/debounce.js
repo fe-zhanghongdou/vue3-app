@@ -1,15 +1,14 @@
 export function debounce(fn, wait, immediate = false) {
-  let timer = null
+  let timer = null;
   return function (...args) {
-    const context = this
     if (timer) {
-      clearTimeout(timer)
+      clearTimeout(timer);
     }
     if (immediate) {
-      fn.apply(context, args)
+      fn.apply(this, args);
     }
     timer = setTimeout(() => {
-      fn.apply(context, args)
-    }, wait)
-  }
+      fn.apply(this, args);
+    }, wait);
+  };
 }

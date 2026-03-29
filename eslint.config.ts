@@ -15,8 +15,6 @@ export default [
   // Vue3 规则
   ...vue.configs['flat/recommended'],
 
-  // Prettier（放最后，不冲突）
-  prettierConfig,
   {
     plugins: { prettier },
     rules: {
@@ -37,16 +35,7 @@ export default [
 
   {
     // 忽略文件（代替 .eslintignore）
-    ignores: [
-      'node_modules/',
-      'dist/',
-      'build/',
-      'public/',
-      '*.config.js',
-      '*.config.ts',
-      '.vscode/',
-      '.DS_Store',
-    ],
+    ignores: ['node_modules/', 'dist/', 'build/', 'public/', '*.config.js', '*.config.ts', '.vscode/', '.DS_Store'],
   },
 
   {
@@ -61,14 +50,14 @@ export default [
       },
     },
     rules: {
+      // ------------ 关键：关闭多余括号校验（解决冲突）------------
+      'no-extra-parens': 'off',
+      '@typescript-eslint/no-extra-parens': 'off',
       // 通用
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { argsIgnorePattern: '^_' },
-      ],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
 
@@ -89,6 +78,10 @@ export default [
       },
     },
     rules: {
+      // ------------ 关键：关闭多余括号校验（解决冲突）------------
+      'no-extra-parens': 'off',
+      '@typescript-eslint/no-extra-parens': 'off',
+
       // Vue 宽松实用
       'vue/multi-word-component-names': 'off',
       'vue/require-default-prop': 'off',
@@ -96,10 +89,9 @@ export default [
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { argsIgnorePattern: '^_' },
-      ],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
+  // Prettier（放最后，不冲突）
+  prettierConfig,
 ];

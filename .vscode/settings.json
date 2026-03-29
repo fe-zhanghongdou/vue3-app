@@ -1,12 +1,29 @@
 {
-  // 强制使用单引号
-  "prettier.singleQuote": true,
-  "prettier.semi": true,
+  // 强制关闭 VSCode 自带格式化（核心！解决换行冲突）
+  "js/ts.format.enabled": false,
 
+  // 只允许 Prettier 格式化
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+
+  // 明确指定 Vue 文件使用 Prettier（关键！）
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+
+  // 保存自动修复 ESLint
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+
+  // Prettier 强制统一规则
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 120,
+  "prettier.tabWidth": 2,
+  "prettier.endOfLine": "auto",
+  "prettier.arrowParens": "avoid",
+
+  // 只校验这三类文件
   "eslint.validate": ["vue", "javascript", "typescript"]
 }
