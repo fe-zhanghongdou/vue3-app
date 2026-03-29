@@ -27,7 +27,7 @@ export const Singleton = (function () {
       name: '单例实例',
       method() {
         console.log('方法调用');
-      },
+      }
     };
   }
 
@@ -37,6 +37,6 @@ export const Singleton = (function () {
         instance = init();
       }
       return instance;
-    },
+    }
   };
 })();

@@ -23,19 +23,19 @@ export default [
         {
           semi: true,
           singleQuote: true,
-          trailingComma: 'es5',
+          trailingComma: 'none',
           printWidth: 120,
           tabWidth: 2,
           endOfLine: 'auto',
-          arrowParens: 'avoid',
-        },
-      ],
-    },
+          arrowParens: 'avoid'
+        }
+      ]
+    }
   },
 
   {
     // 忽略文件（代替 .eslintignore）
-    ignores: ['node_modules/', 'dist/', 'build/', 'public/', '*.config.js', '*.config.ts', '.vscode/', '.DS_Store'],
+    ignores: ['node_modules/', 'dist/', 'build/', 'public/', '*.config.js', '*.config.ts', '.vscode/', '.DS_Store']
   },
 
   {
@@ -46,8 +46,8 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.es2021,
-        ...globals.node,
-      },
+        ...globals.node
+      }
     },
     rules: {
       // ------------ 关键：关闭多余括号校验（解决冲突）------------
@@ -57,8 +57,8 @@ export default [
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    },
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+    }
   },
 
   {
@@ -68,14 +68,14 @@ export default [
       sourceType: 'module',
       globals: {
         ...globals.browser,
-        ...globals.es2021,
+        ...globals.es2021
       },
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
         parser: ts.parser,
-        extraFileExtensions: ['.vue'],
-      },
+        extraFileExtensions: ['.vue']
+      }
     },
     rules: {
       // ------------ 关键：关闭多余括号校验（解决冲突）------------
@@ -89,9 +89,9 @@ export default [
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    },
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+    }
   },
   // Prettier（放最后，不冲突）
-  prettierConfig,
+  prettierConfig
 ];

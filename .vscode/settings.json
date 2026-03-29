@@ -23,6 +23,7 @@
   "prettier.tabWidth": 2,
   "prettier.endOfLine": "auto",
   "prettier.arrowParens": "avoid",
+  "prettier.trailingComma": "none",
 
   // 只校验这三类文件
   "eslint.validate": ["vue", "javascript", "typescript"]

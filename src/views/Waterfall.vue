@@ -30,7 +30,7 @@ const COLORS = [
   '#BB8FCE',
   '#85C1E9',
   '#F8B500',
-  '#00CED1',
+  '#00CED1'
 ] as const;
 
 const items = ref<WaterfallItem[]>([]);
@@ -47,7 +47,7 @@ const generateRandomItem = (id: number): WaterfallItem => {
     image: `https://picsum.photos/300/${height}?random=${id}`,
     title: `图片 ${id}`,
     height,
-    color,
+    color
   };
 };
 
