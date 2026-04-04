@@ -18,7 +18,7 @@ tableData.value = [
 
 <template>
   <div class="home">
-    <h1>首页新增的feature分支内容</h1>
+    <h1>修改首页内容测试deploy是否生效了</h1>
     <Table :data="tableData" />
     <router-link to="/waterfall">{{ unusedVar }}</router-link>
   </div>
