@@ -44,36 +44,36 @@ jobs:
         run: yarn lint
 
       # 构建项目
-      - name: Build project
-        run: yarn build
+      # - name: Build project
+      #   run: yarn build
 
-      #准备目标文件夹的权限
-      - name: 准备目标文件夹的权限
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            mkdir -p /home/ubuntu/nginx/html
-            chmod 755 /home/ubuntu/nginx/html
+      # #准备目标文件夹的权限
+      # - name: 准备目标文件夹的权限
+      #   uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     host: ${{ secrets.SERVER_IP }}
+      #     username: ${{ secrets.SERVER_USERNAME }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     script: |
+      #       mkdir -p /home/ubuntu/nginx/html
+      #       chmod 755 /home/ubuntu/nginx/html
 
-      # 通过SSH部署到服务器
-      - name: Deploy to nginx server
-        uses: appleboy/scp-action@v0.1.4
-        # uses: appleboy/ssh-action@v1.0.0
-        with:
-          # host: ${{ secrets.SERVER_IP }}
-          # username: ${{ secrets.SERVER_USERNAME }}
-          # key: ${{ secrets.SSH_PRIVATE_KEY }}
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            whoami
-            ls -la /home/ubuntu/nginx/
-          # 重要：source 是构建后的目录，这里假设是 'dist'
-          source: 'dist/'
-          target: '/home/ubuntu/nginx/html' # 你的 Nginx 网站根目录
-          strip_components: 1 # 移除路径中的 'dist/' 部分
-          debug: true
+      # # 通过SSH部署到服务器
+      # - name: Deploy to nginx server
+      #   uses: appleboy/scp-action@v0.1.4
+      #   # uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     # host: ${{ secrets.SERVER_IP }}
+      #     # username: ${{ secrets.SERVER_USERNAME }}
+      #     # key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     host: ${{ secrets.SERVER_IP }}
+      #     username: ${{ secrets.SERVER_USERNAME }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     script: |
+      #       whoami
+      #       ls -la /home/ubuntu/nginx/
+      #     # 重要：source 是构建后的目录，这里假设是 'dist'
+      #     source: 'dist/'
+      #     target: '/home/ubuntu/nginx/html' # 你的 Nginx 网站根目录
+      #     strip_components: 1 # 移除路径中的 'dist/' 部分
+      #     debug: true
