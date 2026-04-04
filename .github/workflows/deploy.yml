@@ -60,20 +60,23 @@ jobs:
 
       # 通过SSH部署到服务器
       - name: Deploy to nginx server
-        uses: appleboy/scp-action@v0.1.4
+        uses: easingthemes/ssh-deploy@v4.1.8
         # uses: appleboy/ssh-action@v1.0.0
         with:
           # host: ${{ secrets.SERVER_IP }}
           # username: ${{ secrets.SERVER_USERNAME }}
           # key: ${{ secrets.SSH_PRIVATE_KEY }}
-          host: 111.229.175.151
-          username: deploy
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            whoami
-            ls -la /home/ubuntu/nginx/
-          port: 22
+          REMOTE_HOST: 111.229.175.151
+          REMOTE_USER: deploy
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          # script: |
+          #   whoami
+          #   ls -la /home/ubuntu/nginx/
+          # port: 22
           # 重要：source 是构建后的目录，这里假设是 'dist'
-          source: 'dist/*'
-          target: '/nginx/html' # 你的 Nginx 网站根目录
-          strip_components: 1 # 移除路径中的 'dist/' 部分
+          SOURCE: 'dist/'
+          TARGET: '/home/ubuntu/nginx/html' # 你的 Nginx 网站根目录
+          ARGS: '-avz --delete'
+          SCRIPT_AFTER: |
+            sudo chown -R www-data:www-data /home/ubuntu/nginx/html
+            sudo systemctl reload nginx
