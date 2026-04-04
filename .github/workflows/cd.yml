@@ -1,0 +1,128 @@
+name:
+  CD
+  # 以主干的push事件作为触发条件
+on:
+  push:
+    branches: main
+
+# 定义环境变量，便于管理
+env:
+  NODE_VERSION: '22.x'
+jobs:
+  CD:
+    runs-on: ubuntu-latest
+    steps:
+      # 拉取项目代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      # 给当前环境下载node
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      # 检查缓存
+      # 如果key命中缓存则直接将缓存的文件还原到 path 目录，从而减少流水线运行时间
+      # 若 key 没命中缓存时，在当前Job成功完成时将自动创建一个新缓存
+      - name: Cache
+        # 缓存命中结果会存储在steps.[id].outputs.cache-hit里，该变量在继后的step中可读
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          # 缓存文件目录的路径
+          path: |
+            **/node_modules
+          # key中定义缓存标志位的生成方式。runner.OS指当前环境的系统。外加对yarn.lock内容生成哈希码作为key值，如果yarn.lock改变则代表依赖有变化。
+          # 这里用yarn.lock而不是package.json是因为package.json中还有version和description之类的描述项目但和依赖无关的属性
+          key: ${{runner.OS}}-${{hashFiles('**/yarn.lock')}}
+      - name: Install dependencies
+        # 如果缓存标志位没命中，则执行该step。否则就跳过该step
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: yarn install
+
+      # 从package.json里获取version属性的值
+      # 在CD Workflow中会给每个生成的制品打上标签，而标签取值于version值
+      - name: Read Version
+        # 读取出来的值会放在steps.[id].outputs.value供其他步骤step读取
+        id: version
+        uses: ashley-taylor/read-json-property-action@v1.0
+        with:
+          path: ./package.json
+          property: version
+      # 打包生成制品，且把制品压缩到assets.zip压缩包里
+      - name: Building Project
+        run: |
+          yarn build
+          zip -r assets ./dist/**
+      # 基于当前commit进行版本发布(Create a release)，tag_name是v前缀加上package.json的version值
+      - name: Create Github Releases
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          # GITHUB_TOKEN是准备工作步骤三申请的Personal Access Token
+          GITHUB_TOKEN: ${{ secrets.MY_MAC_TOKEN }}
+        with:
+          tag_name: v${{steps.version.outputs.value}}
+          release_name: v${{steps.version.outputs.value}}
+          draft: false
+          prerelease: fasle
+      # 把assets.zip上传到仓库对应的发布版本Release上
+      - name: Update Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_MAC_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.value }}
+          asset_path: ./assets.zip
+          asset_name: assets.zip
+          asset_content_type: application/zip
+      # 把制品上传到部署机器
+      - name: Upload to Deploy Server
+        uses: easingthemes/ssh-deploy@v2.0.7
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          # 指定当前目录中要上传的内容
+          SOURCE: 'dist/'
+          # 指定上传到部署机器的哪个目录下
+          TARGET: '/home/ubuntu/nginx/html'
+          # 上传前指令，此处用于清空TARGET下的文件
+          ARGS: '-avzr --delete'
+          # REMOTE_HOST为机器的公网IP
+          REMOTE_HOST: ${{ secrets.SERVER_IP }}
+          # REMOTE_USER为登录机器时用到账号名
+          REMOTE_USER: ${{secrets.SERVER_USERNAME}}
+
+      # # 构建项目
+      # - name: Build project
+      #   run: yarn build
+
+      # #准备目标文件夹的权限
+      # - name: 准备目标文件夹的权限
+      #   uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     host: ${{ secrets.SERVER_IP }}
+      #     username: ${{ secrets.SERVER_USERNAME }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     script: |
+      #       mkdir -p /home/ubuntu/nginx/html
+      #       chmod 755 /home/ubuntu/nginx/html
+
+      # # 通过SSH部署到服务器
+      # - name: Deploy to nginx server
+      #   uses: appleboy/scp-action@v0.1.4
+      #   # uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     # host: ${{ secrets.SERVER_IP }}
+      #     # username: ${{ secrets.SERVER_USERNAME }}
+      #     # key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     host: ${{ secrets.SERVER_IP }}
+      #     username: ${{ secrets.SERVER_USERNAME }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     script: |
+      #       whoami
+      #       ls -la /home/ubuntu/nginx/
+      #     # 重要：source 是构建后的目录，这里假设是 'dist'
+      #     source: 'dist/'
+      #     target: '/home/ubuntu/nginx/html' # 你的 Nginx 网站根目录
+      #     strip_components: 1 # 移除路径中的 'dist/' 部分
+      #     debug: true
