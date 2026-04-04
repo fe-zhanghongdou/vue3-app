@@ -51,8 +51,11 @@ jobs:
       - name: Deploy to nginx server
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
+          # host: ${{ secrets.SERVER_IP }}
+          # username: ${{ secrets.SERVER_USERNAME }}
+          # key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: 111.229.175.151
+          username: deploy
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           # 重要：source 是构建后的目录，这里假设是 'dist'
