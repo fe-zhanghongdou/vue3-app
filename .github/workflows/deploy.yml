@@ -51,9 +51,6 @@ jobs:
       - name: Deploy to nginx server
         # uses: appleboy/scp-action@v0.1.4
         uses: appleboy/ssh-action@v1.0.0
-        script: |
-          whoami
-          ls -la /home/ubuntu/nginx/
         with:
           # host: ${{ secrets.SERVER_IP }}
           # username: ${{ secrets.SERVER_USERNAME }}
@@ -61,6 +58,9 @@ jobs:
           host: 111.229.175.151
           username: deploy
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            whoami
+            ls -la /home/ubuntu/nginx/
           port: 22
           # 重要：source 是构建后的目录，这里假设是 'dist'
           source: 'dist/*'
