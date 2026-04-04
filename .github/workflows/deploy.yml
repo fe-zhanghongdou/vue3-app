@@ -49,7 +49,11 @@ jobs:
 
       # 通过SSH部署到服务器
       - name: Deploy to nginx server
-        uses: appleboy/scp-action@v0.1.4
+        # uses: appleboy/scp-action@v0.1.4
+        uses: appleboy/ssh-action@v1.0.0
+        script: |
+          whoami
+          ls -la /home/ubuntu/nginx/
         with:
           # host: ${{ secrets.SERVER_IP }}
           # username: ${{ secrets.SERVER_USERNAME }}
