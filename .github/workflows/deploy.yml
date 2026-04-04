@@ -4,6 +4,10 @@ name: CI
 on:
   pull_request:
     branches: main
+
+# 定义环境变量，便于管理
+env:
+  NODE_VERSION: '22.x'
 jobs:
   CI:
     runs-on: ubuntu-latest
@@ -15,7 +19,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
+          node-version: ${{ env.NODE_VERSION }}
       # 检查缓存
       # 如果key命中缓存则直接将缓存的文件还原到 path 目录，从而减少流水线运行时间
       # 若 key 没命中缓存时，在当前Job成功完成时将自动创建一个新缓存
@@ -38,3 +42,38 @@ jobs:
       - name: Running Lint
         # 通过前面章节定义的命令行执行代码扫描
         run: yarn lint
+
+      # 构建项目
+      - name: Build project
+        run: yarn build
+
+      #准备目标文件夹的权限
+      - name: 准备目标文件夹的权限
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p /home/ubuntu/nginx/html
+            chmod 755 /home/ubuntu/nginx/html
+
+      # 通过SSH部署到服务器
+      - name: Deploy to nginx server
+        uses: appleboy/scp-action@v0.1.4
+        # uses: appleboy/ssh-action@v1.0.0
+        with:
+          # host: ${{ secrets.SERVER_IP }}
+          # username: ${{ secrets.SERVER_USERNAME }}
+          # key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            whoami
+            ls -la /home/ubuntu/nginx/
+          # 重要：source 是构建后的目录，这里假设是 'dist'
+          source: 'dist/'
+          target: '/home/ubuntu/nginx/html' # 你的 Nginx 网站根目录
+          strip_components: 1 # 移除路径中的 'dist/' 部分
+          debug: true
