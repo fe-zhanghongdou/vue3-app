@@ -53,31 +53,39 @@ jobs:
         run: |
           yarn build
           zip -r assets ./dist/**
-      # 基于当前commit进行版本发布(Create a release)，tag_name是v前缀加上package.json的version值
-      - name: Create Github Releases
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          # GITHUB_TOKEN是准备工作步骤三申请的Personal Access Token
-          GITHUB_TOKEN: ${{ secrets.MY_MAC_TOKEN }}
-        with:
-          tag_name: v${{steps.version.outputs.value}}
-          release_name: v${{steps.version.outputs.value}}
-          draft: false
-          prerelease: fasle
-      # 把assets.zip上传到仓库对应的发布版本Release上
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
+
+      - name: Release（create and upload）
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.MY_MAC_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./assets.zip
-          asset_name: assets.zip
-          asset_content_type: application/zip
-        script: |
-          cat ${{ steps.create_release.outputs.upload_url }}
+          tag_name: v${{ steps.version.outputs.value }}
+          files: |
+            ./assets.zip
+
+      # # 基于当前commit进行版本发布(Create a release)，tag_name是v前缀加上package.json的version值
+      # - name: Create Github Releases
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     # GITHUB_TOKEN是准备工作步骤三申请的Personal Access Token
+      #     GITHUB_TOKEN: ${{ secrets.MY_MAC_TOKEN }}
+      #   with:
+      #     tag_name: v${{steps.version.outputs.value}}
+      #     release_name: v${{steps.version.outputs.value}}
+      #     draft: false
+      #     prerelease: fasle
+      # # 把assets.zip上传到仓库对应的发布版本Release上
+      # - name: Upload Release Asset
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.MY_MAC_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ./assets.zip
+      #     asset_name: assets.zip
+      #     asset_content_type: application/zip
 
       # 把制品上传到部署机器
       - name: Upload to Deploy Server
