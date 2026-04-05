@@ -97,7 +97,7 @@ jobs:
 
       # 把制品上传到部署机器
       - name: Upload to Deploy Server
-        uses: easingthemes/ssh-deploy@v2.0.7
+        uses: easingthemes/ssh-deploy@v4.1.8
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           # 指定当前目录中要上传的内容
